@@ -3,10 +3,12 @@
 package lvlogger
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"strings"
 )
 
 // Log levels
@@ -17,6 +19,25 @@ const (
 	Error
 	Fatal
 )
+
+// UnmarshalLogLevel converts log level string to int8 log level
+func UnmarshalLogLevel(levelStr string) (int8, error) {
+	s := strings.ToLower(levelStr)
+	switch s {
+	case "debug":
+		return Debug, nil
+	case "info":
+		return Info, nil
+	case "warn":
+		return Warn, nil
+	case "error":
+		return Error, nil
+	case "fatal":
+		return Fatal, nil
+	default:
+		return 0, errors.New("Invalid level string:" + levelStr)
+	}
+}
 
 // LvLogger is level based logger.
 // It wrapps go standard log.Logger with log level functions.
